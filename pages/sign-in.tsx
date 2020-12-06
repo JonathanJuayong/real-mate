@@ -3,29 +3,32 @@ import {
   Grid,
   GridItem,
   Text,
+  theme,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 
 const SignIn: React.FC<{}> = () => {
-  const bg = "url(/bg-desktop-1.png) center bottom no-repeat"
-  const logoHeight = 50;
+  const bg = theme.colors.gray[200];
+  // const bg = "url(/bg-desktop-1.png) center bottom"
+  const logoHeight = 55;
   const fontSize = 1;
   return (
     <Grid
       m="0"
-      pt="4em"
-      pb="10em"
-      px={["0", "0", "8em", "15em"]}
       bg={bg}
       minH="100vh"
+      justifyItems="center"
     >
       <Grid
+        m="3em"
+        h="350px"
+        w="320px"
         py="2em"
-        bg="rgba(255, 255, 255, 0.7)"
+        bg="rgba(255, 255, 255, 0.8)"
         justifyContent="center"
         alignContent="center"
         alignItems="center"
-        gap="1em"
+        gap=".8em"
       >
         <GridItem>
           <Image
@@ -47,12 +50,12 @@ const SignIn: React.FC<{}> = () => {
           </Text>
         </GridItem>
         <GridItem w="100%">
-          <Button colorScheme="red" w="100%">
+          <Button fontWeight="400" colorScheme="red" w="100%">
             google
           </Button>
         </GridItem>
         <GridItem w="100%">
-          <Button colorScheme="blue" w="100%">
+          <Button fontWeight="400" colorScheme="blue" w="100%">
             facebook
           </Button>
         </GridItem>
