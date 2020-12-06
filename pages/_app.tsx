@@ -1,8 +1,8 @@
-import '../styles/globals.css';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { theme } from '../lib/theme';
+import 'focus-visible/dist/focus-visible';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
