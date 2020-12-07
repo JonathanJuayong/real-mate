@@ -9,7 +9,6 @@ import Image from 'next/image';
 
 const SignIn: React.FC<{}> = () => {
   const bg = theme.colors.gray[200];
-  // const bg = "url(/bg-desktop-1.png) center bottom"
   const logoHeight = 55;
   const fontSize = 1;
   return (
