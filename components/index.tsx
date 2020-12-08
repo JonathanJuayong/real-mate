@@ -1,3 +1,3 @@
 export { Layout } from './layout';
-export { AppSidebar } from './appSidebar';
+export { AppSidebar } from './layout/appSidebar';
 export { Logo } from './logo';
