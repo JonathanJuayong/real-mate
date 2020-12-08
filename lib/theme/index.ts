@@ -3,7 +3,7 @@ import { extendTheme } from '@chakra-ui/react';
 const fonts = {
   branding: {
     header: "'Roboto Slab', serif",
-    body: "'Open Sans Condensed', sans-serif"
+    body: "'Roboto Condensed', sans-serif"
   }
 }
 
