@@ -1,8 +1,10 @@
+import { AppSidebar } from '../../components';
+
 const App = () => {
   return (
-    <div>
+    <AppSidebar>
       App page
-    </div>
+    </AppSidebar>
   )
 }
 
