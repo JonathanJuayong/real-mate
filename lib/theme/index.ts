@@ -12,7 +12,8 @@ export const theme = extendTheme({
     global: {
       body: {
         fontFamily: fonts.branding.body,
-        fontSize: "1.5rem"
+        fontSize: "1.5rem",
+        color: "#292B37"
       }
     }
   },
