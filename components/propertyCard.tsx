@@ -7,8 +7,12 @@ import { theme } from '../lib/theme';
 
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({
-  name, city, price, bed, bath, thumbnail, empty
+  name, city, price, bed, bath, thumbnail
 }) => {
+  const hoverStyle = {
+    color: theme.colors.blue[900],
+    background: theme.colors.gray[100]
+  }
   return (
     <Grid
       border={`2px solid ${theme.colors.blue[900]}`}
@@ -35,12 +39,12 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           <GridItem>
             <FiMapPin />
           </GridItem>
-          <GridItem>
+          <GridItem maxW="16ch">
             <Text isTruncated fontSize="1rem">{city}</Text>
           </GridItem>
         </Grid>
         <Grid className="card name and price">
-          <GridItem>
+          <GridItem maxW="19ch">
             <Text isTruncated fontFamily={theme.fonts.branding.header}>{name}</Text>
           </GridItem>
           <GridItem>
@@ -77,6 +81,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             color="white"
             fontWeight="300"
             borderRadius="0px"
+            _hover={hoverStyle}
           >
             view more details
           </Button>
