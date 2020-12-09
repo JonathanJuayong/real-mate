@@ -44,12 +44,13 @@ const Properties: React.FC = () => {
         as="h1"
         fontFamily={theme.fonts.branding.header}
         fontWeight="700"
+        mb="1em"
       >
         properties:
       </Text>
       <Grid
         gridTemplateColumns="repeat(auto-fit, 278px)"
-        gap="1em"
+        gap="2em"
       >
         {properties.map((item, i) => (
           <PropertyCard

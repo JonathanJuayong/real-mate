@@ -1,4 +1,4 @@
-import { Grid, GridItem, Button, IconButton, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Button, IconButton, Text, Box } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Logo } from '..';
@@ -22,15 +22,13 @@ export const AppSidebar: React.FC<{ pathname: string }> = ({ pathname, children 
     setActive(pathname);
   }, []);
   return (
-    <Grid
-      gridAutoFlow="column"
-      gridTemplateColumns="2fr 10fr"
-      gap="1em"
-    >
+    <>
       <Grid
+        w="13em"
+        position="fixed"
         className="app sidebar"
         bg={theme.colors.blue[900]}
-        minH="100vh"
+        h="100vh"
         justifyItems="center"
         alignItems="center"
         >
@@ -66,12 +64,13 @@ export const AppSidebar: React.FC<{ pathname: string }> = ({ pathname, children 
           ))}
         </Grid>
       </Grid>
-      <GridItem
+      <Box
         className="app content"
         py="1em"
+        ml="15em"
       >
         {children}
-      </GridItem>
-    </Grid>
+      </Box>
+    </>
   )
 }
