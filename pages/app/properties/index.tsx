@@ -42,8 +42,6 @@ const Properties: React.FC = () => {
     <>
       <Text
         as="h1"
-        fontFamily={theme.fonts.branding.header}
-        fontWeight="700"
         mb="1em"
       >
         properties:

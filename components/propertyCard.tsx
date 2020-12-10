@@ -1,5 +1,6 @@
 import { Button, Grid, GridItem, Text } from '@chakra-ui/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PropertyCardProps } from './';
 import { FiMapPin } from 'react-icons/fi';
 import { BiBath, BiBed } from 'react-icons/bi';
@@ -75,16 +76,18 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </Grid>
         </Grid>
         <GridItem className="card btn" mt="1em">
-          <Button
-            bg={theme.colors.blue[900]}
-            w="100%"
-            color="white"
-            fontWeight="300"
-            borderRadius="0px"
-            _hover={hoverStyle}
-          >
-            view more details
-          </Button>
+          <Link href={`/app/properties/${name}`}>
+            <Button
+              bg={theme.colors.blue[900]}
+              w="100%"
+              color="white"
+              fontWeight="300"
+              borderRadius="0px"
+              _hover={hoverStyle}
+            >
+              view more details
+            </Button>
+          </Link>
         </GridItem>
       </Grid>
     </Grid>
