@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
-import Image from 'next/image';
-import { theme } from '../../../lib/theme';
 import { ImageGallery } from '../../../components';
+import { PropertyPageForm } from '../../../components';
 
 const PropertyPage = () => {
   const router = useRouter();
@@ -39,13 +38,11 @@ const PropertyPage = () => {
   }
   const { pid } = router.query
   return (
-    <Grid w="500px">
-      <ImageGallery
-        imagesArray={dummyData.images}
-      />
-      <Grid className="details">
-
-      </Grid>
+    <Grid
+      gridTemplateColumns="1fr 1fr"
+    >
+      <ImageGallery imagesArray={dummyData.images} />
+      <PropertyPageForm />
     </Grid>
   )
 }

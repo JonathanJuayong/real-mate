@@ -3,6 +3,7 @@ export { AppSidebar } from './layout/appSidebar';
 export { Logo } from './logo';
 export { PropertyCard } from './propertyCard';
 export { ImageGallery } from './imageGallery';
+export { PropertyPageForm } from './propertyPageForm';
 
 export interface PropertyCardProps{
   name: string,
