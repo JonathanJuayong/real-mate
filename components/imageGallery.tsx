@@ -41,7 +41,8 @@ export const ImageGallery: React.FC<{ imagesArray: Array<{ type: string, url: st
         </>
       )}
       <Grid className="gallery"
-          gap="1em"
+        gap="1em"
+        w="500px"
       >
         <Text>images:</Text>
         <Grid
@@ -72,7 +73,7 @@ export const ImageGallery: React.FC<{ imagesArray: Array<{ type: string, url: st
             >
               <Image
                 w="100%"
-                fallback={<Skeleton w="150" h="150"/>}
+                fallback={<Skeleton w="234px" h="176px"/>}
                 src={image.url}
                 htmlWidth={150}
                 htmlHeight={150}
