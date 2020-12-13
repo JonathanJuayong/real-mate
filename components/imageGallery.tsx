@@ -42,6 +42,7 @@ export const ImageGallery: React.FC<{ imagesArray: Array<{ type: string, url: st
       )}
       <Grid className="gallery"
         gap="1em"
+        h="100vh"
         w="500px"
       >
         <Text>images:</Text>
