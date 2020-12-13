@@ -1,17 +1,17 @@
-import { FormControl, FormLabel, Input, Grid, Text, FormErrorMessage } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { FormControl, FormLabel, Input, Grid, Text, FormErrorMessage, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Box, Select } from '@chakra-ui/react';
+import { Formik, Form, Field, ErrorMessage, useField, FieldAttributes } from 'formik';
 import { PropertyFormType } from '../components';
 import * as yup from 'yup';
 
 export const PropertyPageForm: React.FC = () => {
   const initialValues: PropertyFormType = {
     name: "",
-    price: 0,
+    price: 1000,
     currency: "php",
     address: {
+      line: "",
       city: "",
       country: "",
-      line: "",
       provinceStateRegion: "",
       zipCode: ""
     },
@@ -29,9 +29,9 @@ export const PropertyPageForm: React.FC = () => {
   }
 
   const addressSchema = yup.object({
+    line: yup.string().required().max(50),
     city: yup.string().required().max(30),
     country: yup.string().required().max(30),
-    line: yup.string().required().max(30),
     provinceStateRegion: yup.string().required().max(30),
     zipCode: yup.string().required().max(10),
   });
@@ -45,37 +45,123 @@ export const PropertyPageForm: React.FC = () => {
     amenities: yup.array(yup.object({
       type: yup.string().required(),
       qty: yup.string().required().min(1),
-    }))
+    })).max(8),
   });
 
   const validationSchema = yup.object({
     name: yup.string().lowercase().required().max(20),
-    price: yup.number().min(0).required(),
-    currency: yup.string(),
+    price: yup.number().min(1).required(),
+    currency: yup.string().required(),
     address: addressSchema,
     details: detailsSchema,    
   })
+  
+  interface FormFieldProps {
+    formField: string,
+    label: string
+  }
+
+  const MyTextField: React.FC<FormFieldProps> = ({ formField, label }) => (
+    <Field name={formField}>
+      {({ field, form }) => (
+        <FormControl isInvalid={form.errors[formField] && form.touched[formField]}>
+          <FormLabel htmlFor={formField}>{label}</FormLabel>
+          <Input {...field} id={formField} />
+          <FormErrorMessage>{form.errors[formField]}</FormErrorMessage>
+        </FormControl>
+      )}
+    </Field>
+  );
+  
+  const MyNumberInput: React.FC<FormFieldProps & {asString?: boolean}> = ({formField, label, asString}) => (
+    <Field name={formField}>
+      {({ field, form }) => (
+        <FormControl id={formField}>
+          <FormLabel htmlFor={formField}>{label}</FormLabel>
+          <NumberInput value={field.value} onChange={val => {
+            const newValue = asString ? `${val}` : parseInt(val); //convert to string is asString is true
+            form.setFieldValue(field.name, newValue);
+          }} min={1}>
+            <NumberInputField/>
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+      )}
+    </Field>
+  )
+
+  const MySelectInput: React.FC<FormFieldProps & {valuesArray: Array<string>}> = ({formField, label, valuesArray}) => (
+    <Field name={formField}>
+      {({ field, form }) => (
+        <FormControl id={formField}>
+          <FormLabel htmlFor={formField}>{label}</FormLabel>
+          <Select placeholder={label} {...field}>
+            {valuesArray.map((value, i) => (
+              <option key={`${value} ${i}`} value={value}>{value}</option>
+            ))}
+          </Select>
+          <FormErrorMessage>{form.errors[formField]}</FormErrorMessage>
+        </FormControl>
+      )}
+    </Field>
+  )
 
   return (
-    <Grid>
+    <Grid
+      gap="1em"
+      w="6em"
+    >
       <Text>details:</Text>
-      <Grid className="form">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
-          validationSchema={validationSchema}
-        >
-          {({values, errors}) => (
-            <Form>
-              <Field type="input" name="name" as={Input}/>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={(values) => {
+          console.log(values);
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ values, errors }) => (
+          <Form>
+            <Grid
+              gap="1em"
+            >
+              <MyTextField
+                formField="name"
+                label="property name"
+              />
+              <MyNumberInput
+                formField="price"
+                label="price"
+              />
+              <MySelectInput
+                formField="currency"
+                label="currency"
+                valuesArray={["php", "usd", "sgd", "aud", "nzd"]}
+              />
+              <MyTextField
+                formField="address.line"
+                label="address line"
+              />
+              <MyTextField
+                formField="address.city"
+                label="city"
+              />
+              <MyTextField
+                formField="address.country"
+                label="country"
+              />
+              <MyTextField
+                formField="address.provinceStateRegion"
+                label="province/state/region"
+              />
               <pre>values: {JSON.stringify(values, null, 2)}</pre>
               <pre>errors: {JSON.stringify(errors, null, 2)}</pre>
-            </Form>
-          )}
-        </Formik>
-      </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </Grid>
   )
 }
