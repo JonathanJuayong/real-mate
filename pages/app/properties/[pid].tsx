@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
-import { ImageGallery } from '../../../components';
-import { PropertyPageForm } from '../../../components';
+import { ImageGallery, PropertyPageForm, PropertyDataType } from '../../../components';
 
 const PropertyPage = () => {
   const router = useRouter();
-  const dummyData = {
+  const dummyData: PropertyDataType = {
     name: "laureano di trevi",
     price: 4200000,
     currency: "php",
@@ -22,10 +21,10 @@ const PropertyPage = () => {
         unit: "square meter",
         floors: 2
       },
-      amenities: {
-        bedroom: 2,
-        bathroom: 2,
-      }
+      amenities: [
+        { type: "bedroom", qty: 2},
+        { type: "bathroom", qty: 2},
+      ]
     },
     images: [
       { type: "bedroom1", url: "/test/house1.png" },

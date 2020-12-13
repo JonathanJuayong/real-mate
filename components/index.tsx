@@ -13,3 +13,27 @@ export interface PropertyCardProps{
   bath: number,
   thumbnail: string,
 }
+
+export interface PropertyDataType {
+  name: string,
+  price: number,
+  currency: string,
+  address: {
+    line: string,
+    city: string,
+    provinceStateRegion: string,
+    country: string,
+    zipCode: string
+  },
+  details: {
+    size: {
+      area: number,
+      unit: string,
+      floors: number
+    },
+    amenities: Array<{type: string, qty: number}>
+  },
+  images: Array<{type: string, url: string}>
+}
+
+export type PropertyFormType = Omit<PropertyDataType, "images">
