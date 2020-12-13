@@ -1,5 +1,5 @@
-import { FormControl, FormLabel, Input, Grid, Text, FormErrorMessage, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Box, Select } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage, useField, FieldAttributes } from 'formik';
+import { FormControl, FormLabel, Input, Grid, Text, FormErrorMessage, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Box, Select, Button } from '@chakra-ui/react';
+import { Formik, Form, Field, ErrorMessage, useField, FieldAttributes, FieldArray } from 'formik';
 import { PropertyFormType } from '../components';
 import * as yup from 'yup';
 
@@ -58,7 +58,7 @@ export const PropertyPageForm: React.FC = () => {
   
   interface FormFieldProps {
     formField: string,
-    label: string
+    label?: string
   }
 
   const MyTextField: React.FC<FormFieldProps> = ({ formField, label }) => (
@@ -79,7 +79,7 @@ export const PropertyPageForm: React.FC = () => {
         <FormControl id={formField}>
           <FormLabel htmlFor={formField}>{label}</FormLabel>
           <NumberInput value={field.value} onChange={val => {
-            const newValue = asString ? `${val}` : parseInt(val); //convert to string is asString is true
+            const newValue = asString ? `${val}` : parseInt(val); //convert to string if asString is true
             form.setFieldValue(field.name, newValue);
           }} min={1}>
             <NumberInputField/>
@@ -108,6 +108,45 @@ export const PropertyPageForm: React.FC = () => {
       )}
     </Field>
   )
+
+  const MyAmenitiesFieldArray = ({ formField, label, values }) => {
+    const objectPaths = formField.split(".");
+    const nestedValueObject = objectPaths.reduce((acc, cur) => acc[cur], values)
+    return (
+      <FieldArray name={formField}>
+        {arrayHelpers => (
+          <FormControl id={formField}>
+            <FormLabel htmlFor={formField}>{label}</FormLabel>
+            {nestedValueObject.map((value, i) => (
+              <Grid key={`${value} ${i}`}>
+                <MyTextField
+                  formField={`${formField}.${i}.type`}
+                />
+                <MyNumberInput
+                  formField={`${formField}.${i}.qty`}
+                />
+                <Button onClick={() => {
+                  arrayHelpers.remove(i);
+                }}>
+                  &times;
+                </Button>
+              </Grid>
+            ))}
+            <Button
+              onClick={() => {
+                arrayHelpers.push({
+                  type: "amenties",
+                  qty: 1
+                })
+              }}
+            >
+              + add amenities
+            </Button>
+          </FormControl>
+        )}
+      </FieldArray>
+    )
+  }
 
   return (
     <Grid
@@ -155,6 +194,16 @@ export const PropertyPageForm: React.FC = () => {
               <MyTextField
                 formField="address.provinceStateRegion"
                 label="province/state/region"
+              />
+              <MyNumberInput
+                formField="address.zipCode"
+                label="zip code"
+                asString
+              />
+              <MyAmenitiesFieldArray
+                formField="details.amenities"
+                label="amenities"
+                values={values}
               />
               <pre>values: {JSON.stringify(values, null, 2)}</pre>
               <pre>errors: {JSON.stringify(errors, null, 2)}</pre>
