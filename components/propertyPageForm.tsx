@@ -34,7 +34,7 @@ export const PropertyPageForm: React.FC = () => {
     country: yup.string().required().max(30),
     provinceStateRegion: yup.string().required().max(30),
     zipCode: yup.string().required().max(10),
-  });
+  }).required();
 
   const detailsSchema = yup.object({
     size: yup.object({
@@ -43,13 +43,13 @@ export const PropertyPageForm: React.FC = () => {
       unit: yup.string().required()
     }),
     amenities: yup.array(yup.object({
-      type: yup.string().required(),
+      type: yup.string().required().max(20),
       qty: yup.string().required().min(1),
     })).max(8),
   });
 
   const validationSchema = yup.object({
-    name: yup.string().lowercase().required().max(20),
+    name: yup.string().required().max(20),
     price: yup.number().min(1).required(),
     currency: yup.string().required(),
     address: addressSchema,
@@ -63,13 +63,32 @@ export const PropertyPageForm: React.FC = () => {
 
   const MyTextField: React.FC<FormFieldProps> = ({ formField, label }) => (
     <Field name={formField}>
-      {({ field, form }) => (
-        <FormControl isInvalid={form.errors[formField] && form.touched[formField]}>
-          <FormLabel htmlFor={formField}>{label}</FormLabel>
-          <Input {...field} id={formField} />
-          <FormErrorMessage>{form.errors[formField]}</FormErrorMessage>
-        </FormControl>
-      )}
+      {({ field, form }) => {
+        // for fields that have nested properties
+        const objectPaths = formField.split(".");
+        const formError = objectPaths.reduce((acc, cur) => {
+          if (typeof acc !== "undefined") { // handle undefined in runtime
+            return acc[cur];
+          } else {
+            return;
+          }
+        }, form.errors);
+        const formTouched = objectPaths.reduce((acc, cur) => {
+          if (typeof acc !== "undefined") {
+            return acc[cur];
+          } else {
+            return;
+          }
+        }, form.touched);
+
+        return(
+          <FormControl isInvalid={formError && formTouched} isTruncated>
+            <FormLabel htmlFor={formField}>{label}</FormLabel>
+            <Input {...field} id={formField} />
+            <FormErrorMessage>{formError}</FormErrorMessage>
+          </FormControl>
+        )
+      }}
     </Field>
   );
   
@@ -116,7 +135,7 @@ export const PropertyPageForm: React.FC = () => {
       <FieldArray name={formField}>
         {arrayHelpers => (
           <FormControl id={formField}>
-            <FormLabel htmlFor={formField}>{label}</FormLabel>
+            <FormLabel htmlFor={formField}>{label} (max of 8 items)</FormLabel>
             {nestedValueObject.map((value, i) => (
               <Grid key={`${value} ${i}`}>
                 <MyTextField
@@ -125,23 +144,27 @@ export const PropertyPageForm: React.FC = () => {
                 <MyNumberInput
                   formField={`${formField}.${i}.qty`}
                 />
-                <Button onClick={() => {
-                  arrayHelpers.remove(i);
-                }}>
-                  &times;
-                </Button>
+                {nestedValueObject.length > 1 && (
+                  <Button onClick={() => {
+                    arrayHelpers.remove(i);
+                  }}>
+                    &times;
+                  </Button>
+                )}
               </Grid>
             ))}
-            <Button
-              onClick={() => {
-                arrayHelpers.push({
-                  type: "amenties",
-                  qty: 1
-                })
-              }}
-            >
-              + add amenities
-            </Button>
+            {nestedValueObject.length < 8 && (
+              <Button
+                onClick={() => {
+                  arrayHelpers.push({
+                    type: "amenties",
+                    qty: 1
+                  })
+                }}
+              >
+                + add amenities
+              </Button>
+            )}
           </FormControl>
         )}
       </FieldArray>
@@ -151,7 +174,7 @@ export const PropertyPageForm: React.FC = () => {
   return (
     <Grid
       gap="1em"
-      w="6em"
+      pr="2em"
     >
       <Text>details:</Text>
       <Formik
@@ -205,8 +228,8 @@ export const PropertyPageForm: React.FC = () => {
                 label="amenities"
                 values={values}
               />
-              <pre>values: {JSON.stringify(values, null, 2)}</pre>
-              <pre>errors: {JSON.stringify(errors, null, 2)}</pre>
+              {/* <pre>values: {JSON.stringify(values, null, 2)}</pre> */}
+              {/* <pre>errors: {JSON.stringify(errors, null, 2)}</pre> */}
             </Grid>
           </Form>
         )}
