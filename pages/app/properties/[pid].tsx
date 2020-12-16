@@ -39,6 +39,7 @@ const PropertyPage = () => {
   return (
     <Grid
       gridTemplateColumns="1fr 1fr"
+      pr="2em"
     >
       <ImageGallery imagesArray={dummyData.images} />
       <PropertyPageForm />

@@ -1,7 +1,28 @@
-import { FormControl, FormLabel, Input, Grid, Text, FormErrorMessage, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Box, Select, Button } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage, useField, FieldAttributes, FieldArray } from 'formik';
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Grid,
+  Text,
+  FormErrorMessage,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  Divider,
+  Select,
+  Button,
+} from '@chakra-ui/react';
+import {
+  Formik,
+  Form,
+  Field,
+  FieldArray
+} from 'formik';
 import { PropertyFormType } from '../components';
 import * as yup from 'yup';
+import { theme } from '../lib/theme';
 
 export const PropertyPageForm: React.FC = () => {
   const initialValues: PropertyFormType = {
@@ -17,8 +38,8 @@ export const PropertyPageForm: React.FC = () => {
     },
     details: {
       size: {
-        area: 0,
-        floors: 0,
+        area: 1,
+        floors: 1,
         unit: ""
       },
       amenities: [
@@ -38,8 +59,8 @@ export const PropertyPageForm: React.FC = () => {
 
   const detailsSchema = yup.object({
     size: yup.object({
-      area: yup.number().required().min(0),
-      floors: yup.number().required().min(0),
+      area: yup.number().required().min(1),
+      floors: yup.number().required().min(1),
       unit: yup.string().required()
     }),
     amenities: yup.array(yup.object({
@@ -136,35 +157,51 @@ export const PropertyPageForm: React.FC = () => {
         {arrayHelpers => (
           <FormControl id={formField}>
             <FormLabel htmlFor={formField}>{label} (max of 8 items)</FormLabel>
-            {nestedValueObject.map((value, i) => (
-              <Grid key={`${value} ${i}`}>
-                <MyTextField
-                  formField={`${formField}.${i}.type`}
-                />
-                <MyNumberInput
-                  formField={`${formField}.${i}.qty`}
-                />
-                {nestedValueObject.length > 1 && (
-                  <Button onClick={() => {
-                    arrayHelpers.remove(i);
-                  }}>
-                    &times;
-                  </Button>
-                )}
-              </Grid>
-            ))}
-            {nestedValueObject.length < 8 && (
-              <Button
-                onClick={() => {
-                  arrayHelpers.push({
-                    type: "amenties",
-                    qty: 1
-                  })
-                }}
-              >
-                + add amenities
-              </Button>
-            )}
+            <Grid
+              gap="1em"
+              alignItems="center"
+            >
+              {nestedValueObject.map((value, i) => (
+                <Grid
+                  key={`${value} ${i}`}
+                  gridTemplateColumns="4fr 1fr 1fr"
+                  gap="1em"
+
+                  alignContent="flex-start"
+                >
+                  <MyTextField
+                    formField={`${formField}.${i}.type`}
+                  />
+                  <MyNumberInput
+                    formField={`${formField}.${i}.qty`}
+                  />
+                  {nestedValueObject.length > 1 && (
+                    <Button
+                      mt="9px"
+                      onClick={() => {
+                      arrayHelpers.remove(i);
+                      }}
+                    >
+                      &times;
+                    </Button>
+                  )}
+                </Grid>
+              ))}
+              {nestedValueObject.length < 8 && (
+                <Button
+                  fontWeight="400"
+                  w="100%"
+                  onClick={() => {
+                    arrayHelpers.push({
+                      type: "amenties",
+                      qty: 1
+                    })
+                  }}
+                >
+                  + add amenities
+                </Button>
+              )}
+            </Grid>
           </FormControl>
         )}
       </FieldArray>
@@ -174,61 +211,119 @@ export const PropertyPageForm: React.FC = () => {
   return (
     <Grid
       gap="1em"
-      pr="2em"
     >
       <Text>details:</Text>
       <Formik
         initialValues={initialValues}
         onSubmit={(values) => {
-          console.log(values);
+          alert(values);
         }}
         validationSchema={validationSchema}
       >
-        {({ values, errors }) => (
+        {({ values, isSubmitting }) => (
           <Form>
             <Grid
+              className="first part"
               gap="1em"
             >
-              <MyTextField
-                formField="name"
-                label="property name"
-              />
-              <MyNumberInput
-                formField="price"
-                label="price"
-              />
-              <MySelectInput
-                formField="currency"
-                label="currency"
-                valuesArray={["php", "usd", "sgd", "aud", "nzd"]}
-              />
-              <MyTextField
-                formField="address.line"
-                label="address line"
-              />
-              <MyTextField
-                formField="address.city"
-                label="city"
-              />
-              <MyTextField
-                formField="address.country"
-                label="country"
-              />
-              <MyTextField
-                formField="address.provinceStateRegion"
-                label="province/state/region"
-              />
-              <MyNumberInput
-                formField="address.zipCode"
-                label="zip code"
-                asString
-              />
-              <MyAmenitiesFieldArray
-                formField="details.amenities"
-                label="amenities"
-                values={values}
-              />
-              {/* <pre>values: {JSON.stringify(values, null, 2)}</pre> */}
+              <Grid
+                gap="1em"
+              >
+                <MyTextField
+                  formField="name"
+                  label="property name"
+                />
+                <Grid
+                  gridTemplateColumns="1fr 4fr"
+                  gap="1em"
+                >
+                  <MySelectInput
+                    formField="currency"
+                    label="currency"
+                    valuesArray={["php", "usd", "sgd", "aud", "nzd"]}
+                  />
+                  <MyNumberInput
+                    formField="price"
+                    label="price"
+                  />
+                </Grid>
+              </Grid>
+              <Divider/>
+              <Grid
+                className="second part"
+                gap="1em"
+              >
+                <MyTextField
+                  formField="address.line"
+                  label="address line"
+                />
+                <Grid
+                  gridTemplateColumns="1fr 1fr"
+                  gap="1em"
+                >
+                  <MyTextField
+                    formField="address.city"
+                    label="city"
+                  />
+                  <MyTextField
+                    formField="address.provinceStateRegion"
+                    label="province/state/region"
+                  />
+                </Grid>
+                <Grid
+                  gridTemplateColumns="3fr 1fr"
+                  gap="1em"
+                >
+                  <MyTextField
+                    formField="address.country"
+                    label="country"
+                  />
+                  <MyNumberInput
+                    formField="address.zipCode"
+                    label="zip code"
+                    asString
+                  />
+                </Grid>
+              </Grid>
+              <Divider />
+              <Grid
+                className="third part"
+                gap="1em"
+              >
+                <Grid
+                  gap="1em"
+                  gridTemplateColumns="1fr 1fr 1fr"
+                >
+                  <MySelectInput
+                    formField="details.size.unit"
+                    label="unit"
+                    valuesArray={["square meter", "square feet"]}
+                  />
+                  <MyNumberInput
+                    formField="details.size.area"
+                    label="lot area"
+                  />
+                  <MyNumberInput
+                    formField="details.size.floors"
+                    label="floors"
+                  />
+                </Grid>
+                <MyAmenitiesFieldArray
+                  formField="details.amenities"
+                  label="amenities"
+                  values={values}
+                />
+              </Grid>
+              <Divider />
+              <Button
+                type="submit"
+                isLoading={isSubmitting}
+                bg={theme.colors.blue[900]}
+                color="white"
+              >
+                update details
+              </Button>
+              <pre>values: {JSON.stringify(values, null, 2)}</pre>
               {/* <pre>errors: {JSON.stringify(errors, null, 2)}</pre> */}
             </Grid>
           </Form>
